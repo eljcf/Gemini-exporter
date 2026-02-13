@@ -53,8 +53,7 @@ git clone https://github.com/eljcf/Gemini-exporter.git
 #### 3. 加载插件
 
 * 点击左上角的 **"加载已解压的扩展程序" (Load unpacked)** 按钮。
-* 选择包含 `manifest.json` 文件的**根目录**（例如 `gemini-chat-exporter` 文件夹）。
-
+* 选择src文件夹即可
 #### 4. 完成
 
 浏览器工具栏出现插件图标，安装成功！🎉
@@ -64,7 +63,7 @@ git clone https://github.com/eljcf/Gemini-exporter.git
 ## 📖 使用指南 (Usage)
 
 1. **打开页面**：访问 [Google Gemini](https://gemini.google.com/) 并进入任意一个对话页面。
-2. **启动导出**：点击浏览器右上角的 **Gemini Chat Exporter** 插件图标，点击`导出完整对话`。
+2. **启动导出**：点击浏览器右上角的 **Gemini-Exporter** 插件图标，点击`导出完整对话`。
 3. **等待回溯**：
 * 页面右下角会出现悬浮面板，显示进度（如：“📚 正在加载历史... (第 X 页)”）。
 * 插件会自动控制页面向上滚动，**请勿关闭当前标签页**。
