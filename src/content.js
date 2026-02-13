@@ -156,7 +156,39 @@ async function startExportProcess(format) {
         copyBtn.innerText = "📋 复制启动 Prompt";
         copyBtn.style.cssText = "width: 100%; padding: 10px; background: #1a73e8; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;";
         copyBtn.onclick = () => {
-            const prompt = `系统提示：以下内容是用户与 Gemini 的过往对话历史。请读取此上下文，并恢复之前的对话记忆，准备回答用户的新问题。不要对历史内容进行总结，只需确认“已读取上下文”。`;
+            const prompt = `<role_definition>
+你是搭载了**外部记忆库* 的智能助手。
+我上传了一份结构化文档，请将其作为本次会话的**核心上下文扩展**。
+</role_definition>
+
+<memory_protocol>
+**构建记忆索引**:
+1. 不要试图逐字逐句复述全文，这很低效。
+2. 请快速扫描文档，在你的上下文窗口中构建一个**虚拟索引 **。
+3. 重点提取以下元数据：
+   - **关键实体**：核心概念、项目名称、特定术语。
+   - **逻辑关系**：各章节/模块之间的层级与关联。
+   - **时间/流程**：如果是对话或日志，标记关键的时间节点和转折点。
+目标是：当你需要信息时，能通过索引快速定位到原文的具体片段。
+</memory_protocol>
+
+<retrieval_hierarchy>
+**混合检索机制 **:
+在回答我的后续问题时，请严格遵循以下**优先级路径**:
+
+1.  **第一优先级：上下文检索**
+    * 首先查询你构建的<虚拟索引>。
+    * 如果用户问题涉及文件中的定义、设定或历史记录，**直接引用**文件内容作为事实依据。
+
+2.  **第二优先级：知识补全**
+    * 如果文件内容未提及,或信息不完整,**则调用你的预训练知识**进行推理、解释或补充。
+    * 注意：外部知识仅用于**辅助解释**或**填补空白**，不得篡改文件内已明确定义的设定。
+</retrieval_hierarchy>
+
+<initialization>
+请读取文件，建立索引，并仅回复以下内容表示准备就绪：
+"外部记忆索引已构建。"
+</initialization>`;
             navigator.clipboard.writeText(prompt).then(() => {
                 copyBtn.innerText = "✅ 已复制成功！"; copyBtn.style.background = "#188038";
                 setTimeout(() => { copyBtn.innerText = "📋 复制启动 Prompt"; copyBtn.style.background = "#1a73e8"; }, 2000);
