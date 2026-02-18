@@ -4,8 +4,7 @@
     "version": "1.0",
     "description": "支持全量回溯与MD/JSON格式导出的 Gemini 插件",
     "permissions": [
-        "activeTab",
-        "scripting"
+        "activeTab"
     ],
     "host_permissions": [
         "https://gemini.google.com/*"
