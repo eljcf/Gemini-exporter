@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Gemini Chat Exporter - Pro Max",
-    "version": "2.1",
-    "description": "支持全量回溯与双格式导出的 Gemini 助手",
+    "name": "Gemini-exporter",
+    "version": "1.0",
+    "description": "支持全量回溯与MD/JSON格式导出的 Gemini 插件",
     "permissions": [
         "activeTab",
         "scripting"
@@ -11,7 +11,17 @@
         "https://gemini.google.com/*"
     ],
     "action": {
-        "default_popup": "popup.html"
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "assets/icon16.png",
+            "48": "assets/icon48.png",
+            "128": "assets/icon128.png"
+        }
+    },
+    "icons": {
+        "16": "assets/icon16.png",
+        "48": "assets/icon48.png",
+        "128": "assets/icon128.png"
     },
     "content_scripts": [
         {
