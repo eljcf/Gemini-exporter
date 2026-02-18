@@ -6,7 +6,7 @@ btn.addEventListener('click', () => {
     const selectedFormat = formatSelect.value;
     btn.disabled = true;
     btn.innerText = "正在启动...";
-    status.innerText = "正在呼叫网页特工...";
+    status.innerText = "正在呼叫网页...";
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (!tabs[0]) return;

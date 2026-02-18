@@ -88,6 +88,7 @@ async function scrollUp() {
 }
 
 // 4. 数据解析与格式化
+
 function getChatData() {
     const userNodes = Array.from(document.querySelectorAll('.user-query-container'));
     const modelNodes = Array.from(document.querySelectorAll('.model-response-container, .markdown, [data-test-id="model-response-text"]'));
@@ -96,15 +97,43 @@ function getChatData() {
         ...userNodes.map(n => ({ role: 'User', node: n })),
         ...modelNodes.map(n => ({ role: 'Gemini', node: n }))
     ];
+
     all.sort((a, b) => (a.node.compareDocumentPosition(b.node) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1);
 
     const history = [];
     const seen = new Set();
 
+    // 定义噪音词集合
+    const NOISE_WORDS = ["you said", "您说", "edit", "编辑"];
+
     all.forEach(({ role, node }) => {
-        let text = node.innerText.trim();
-        if (!text || text === "Show thinking") return;
-        text = text.replace(/|/g, '');
+        let rawText = "";
+
+        // 针对 User 消息，优先深入子层级抓取，如果还多抓了，靠后面的行过滤解决
+        if (role === 'User') {
+            const queryTextEl = node.querySelector('.query-text');
+            rawText = queryTextEl ? queryTextEl.innerText : node.innerText;
+        } else {
+            rawText = node.innerText;
+        }
+
+        // --- 核心修复：行过滤逻辑 ---
+        let lines = rawText.split('\n');
+        let cleanLines = lines.filter(line => {
+            const trimmedLine = line.trim().toLowerCase();
+            // 过滤掉：空行、纯噪音词行、以及包含噪音词且长度很短的行
+            if (!trimmedLine) return false;
+            if (NOISE_WORDS.includes(trimmedLine)) return false;
+            return true;
+        });
+
+        let text = cleanLines.join('\n').trim();
+
+
+        if (!text || text === "Show thinking" || text === "正在思考") return;
+
+  
+        text = text.replace(/显示草稿|Show drafts|Regenerate|重新生成/g, '').trim();
 
         const fingerprint = role + text.substring(0, 30) + text.length;
         if (seen.has(fingerprint)) return;
@@ -112,13 +141,13 @@ function getChatData() {
 
         history.push({ role, content: text });
     });
+
     return history;
 }
-
 // 5. 主流程
 async function startExportProcess(format) {
     isExporting = true;
-    updateStatus("🚀 正在启动全量回溯...");
+    updateStatus(" 正在启动全量回溯...");
     try {
         await scrollUp();
         updateStatus("⚡ 正在处理数据并转换格式...");
